@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Infinite Clicker X</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Infinite Clicker X - Fixed UI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <style>
 *{
@@ -13,47 +13,26 @@
 body{
     margin:0;
     font-family:system-ui;
-    background:radial-gradient(circle at top,#1e3a8a,#020617 60%,black);
+    background:radial-gradient(circle at top,#1e3a8a,#020617 70%,black);
     color:white;
     text-align:center;
-    overflow-x:hidden;
-}
-
-/* STOP MOBILE ZOOM / JITTER */
-html,body{
-    overscroll-behavior:none;
-    touch-action:manipulation;
 }
 
 header{
     padding:14px;
     background:#0f172a;
     font-weight:800;
-    position:sticky;
-    top:0;
-    z-index:10;
 }
+
+.main{max-width:900px;margin:auto;padding:12px;}
 
 .card{
-    margin:12px;
-    padding:16px;
     background:#0f172a;
+    padding:16px;
+    margin:12px 0;
     border-radius:16px;
+    border:1px solid #334155;
 }
-
-button{
-    padding:12px 14px;
-    margin:6px;
-    border-radius:999px;
-    border:0;
-    cursor:pointer;
-    font-size:16px;
-    touch-action:manipulation;
-}
-
-.primary{background:#3b82f6;color:white;}
-.green{background:#22c55e;color:white;}
-.dark{background:#1f2937;color:white;}
 
 #money{
     font-size:44px;
@@ -74,48 +53,76 @@ button{
     font-size:13px;
 }
 
-/* CLICK FX */
-.pop{
-    animation:pop .15s ease;
+button{
+    padding:12px 14px;
+    margin:6px;
+    border-radius:999px;
+    border:0;
+    cursor:pointer;
+    font-size:15px;
+    touch-action:manipulation;
 }
+
+.primary{background:#3b82f6;color:white;}
+.green{background:#22c55e;color:white;}
+.dark{background:#1f2937;color:white;}
+
+.shop-grid{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+}
+
+.shop-item{
+    background:#020617;
+    border:1px solid #334155;
+    padding:12px;
+    border-radius:14px;
+    width:240px;
+}
+
+.shop-title{
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.small{
+    font-size:13px;
+    color:#94a3b8;
+}
+
+/* CLICK FX */
+.pop{animation:pop .15s ease;}
 
 @keyframes pop{
     0%{transform:scale(1);}
     50%{transform:scale(1.2);}
     100%{transform:scale(1);}
 }
-
-/* FLOATING TEXT */
-.float{
-    position:absolute;
-    animation:floatUp 1s ease forwards;
-    pointer-events:none;
-    color:#22c55e;
-    font-weight:800;
-}
-
-@keyframes floatUp{
-    from{opacity:1; transform:translateY(0);}
-    to{opacity:0; transform:translateY(-60px);}
-}
 </style>
 </head>
 
 <body>
 
-<header>💰 Infinite Clicker X</header>
+<header>💰 Infinite Clicker X (FULL UI RESTORED)</header>
 
-<div class="card" id="login">
+<div class="main">
+
+<!-- LOGIN -->
+<div class="card" id="loginCard">
     <h2>Login</h2>
     <input id="u" placeholder="Username">
     <input id="p" type="password" placeholder="Password">
     <br>
-    <button class="primary" onclick="login()">Enter</button>
+    <button class="primary" onclick="login()">Enter Game</button>
     <p id="msg"></p>
 </div>
 
-<div class="card" id="game" style="display:none;">
+<!-- GAME -->
+<div id="game" style="display:none;">
 
+<div class="card">
     <div id="money">$0</div>
 
     <div class="stats">
@@ -125,25 +132,47 @@ button{
         <div class="pill">Mult: x<span id="mul">1</span></div>
     </div>
 
-    <hr>
-
     <button class="primary" id="clickBtn" onclick="clickMoney(event)">CLICK 💥</button>
+</div>
 
-    <hr>
+<!-- SHOP (FIXED UI) -->
+<div class="card">
+    <h2>🛒 Shop</h2>
 
-    <button class="dark" onclick="buyClick()">Upgrade Click</button>
-    <button class="dark" onclick="buyAuto()">Upgrade Auto</button>
+    <div class="shop-grid">
 
-    <hr>
+        <div class="shop-item">
+            <div class="shop-title">Click Upgrade</div>
+            <div class="small">Increase click power</div>
+            <div>Cost: $<span id="cCost">10</span></div>
+            <button class="dark" onclick="buyClick()">Buy</button>
+        </div>
 
-    <button class="green" onclick="rebirth()">REBIRTH 🔁</button>
+        <div class="shop-item">
+            <div class="shop-title">Auto Upgrade</div>
+            <div class="small">Passive income</div>
+            <div>Cost: $<span id="aCost">25</span></div>
+            <button class="dark" onclick="buyAuto()">Buy</button>
+        </div>
 
-    <hr>
+        <div class="shop-item">
+            <div class="shop-title">Rebirth</div>
+            <div class="small">Reset for permanent boost</div>
+            <div>Need: $5000</div>
+            <button class="green" onclick="rebirth()">REBIRTH</button>
+        </div>
 
-    <button class="dark" onclick="exportLB()">Export Leaderboard</button>
-    <button class="dark" onclick="importLB()">Import Leaderboard</button>
+    </div>
+</div>
 
-    <p id="lb"></p>
+<!-- LEADERBOARD (RESTORED VISUAL) -->
+<div class="card">
+    <h2>🏆 Leaderboard</h2>
+    <button class="dark" onclick="refreshLB()">Refresh</button>
+    <div id="lb"></div>
+</div>
+
+</div>
 </div>
 
 <script>
@@ -158,35 +187,32 @@ let mult=1;
 let clickLevel=0;
 let autoLevel=0;
 
-// ===== MOBILE FIX: PREVENT DOUBLE TAP ZOOM =====
-document.addEventListener("touchstart",function(){},{passive:true});
-
 // ===== LOGIN =====
 function login(){
-    const name=document.getElementById("u").value;
-    const pass=document.getElementById("p").value;
+    const name=uInput();
+    const pass=pInput();
 
     if(!name||!pass)return;
 
     u=name;
 
-    let data=load(u);
+    let d=load(u);
 
-    if(!data){
+    if(!d){
         save(u,{pass,money:0,cp:1,ap:0,rb:0,mult:1});
         msg("Created!");
     }else{
-        if(data.pass!==pass)return msg("Wrong password");
-        msg("Loaded");
+        if(d.pass!==pass)return msg("Wrong password");
+        msg("Loaded!");
     }
 
-    data=load(u);
+    d=load(u);
 
-    money=data.money;
-    cp=data.cp;
-    ap=data.ap;
-    rb=data.rb;
-    mult=data.mult;
+    money=d.money;
+    cp=d.cp;
+    ap=d.ap;
+    rb=d.rb;
+    mult=d.mult;
 
     show();
     update();
@@ -197,35 +223,19 @@ function key(x){return "cx_"+x;}
 function save(x,d){localStorage.setItem(key(x),JSON.stringify(d));}
 function load(x){return JSON.parse(localStorage.getItem(key(x))||"null");}
 
-// ===== CLICK SYSTEM (FUN) =====
+// ===== CLICK =====
 function clickMoney(e){
-    let gain = cp * mult;
+    let gain=cp*mult;
 
-    // CRIT CHANCE
-    if(Math.random()<0.1){
-        gain*=5;
-    }
+    if(Math.random()<0.1)gain*=5;
 
     money+=gain;
 
-    floatText(e.clientX,e.clientY,"+"+gain);
-
-    animate();
+    animate(e);
     update();
 }
 
-// ===== FLOAT TEXT =====
-function floatText(x,y,text){
-    const el=document.createElement("div");
-    el.className="float";
-    el.innerText=text;
-    el.style.left=x+"px";
-    el.style.top=y+"px";
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),1000);
-}
-
-// ===== UPGRADES =====
+// ===== SHOP =====
 function buyClick(){
     let cost=Math.floor(10*Math.pow(1.35,clickLevel));
     if(money>=cost){
@@ -246,7 +256,7 @@ function buyAuto(){
     update();
 }
 
-// ===== REBIRTH SYSTEM =====
+// ===== REBIRTH =====
 function rebirth(){
     if(money<5000)return;
 
@@ -257,7 +267,7 @@ function rebirth(){
     autoLevel=0;
 
     rb++;
-    mult = 1 + rb*0.5;
+    mult=1+rb*0.5;
 
     update();
 }
@@ -268,25 +278,22 @@ setInterval(()=>{
     update();
 },1000);
 
-// ===== LEADERBOARD (LOCAL GLOBAL SIM) =====
-function exportLB(){
-    let lb = JSON.parse(localStorage.getItem("leaderboard")||"[]");
+// ===== LEADERBOARD =====
+function refreshLB(){
+    let lb=JSON.parse(localStorage.getItem("lb")||"[]");
 
     lb.push({name:u,score:money});
 
     lb.sort((a,b)=>b.score-a.score);
 
-    localStorage.setItem("leaderboard",JSON.stringify(lb.slice(0,20)));
+    lb=lb.slice(0,10);
 
-    document.getElementById("lb").innerText="Exported!";
-}
+    localStorage.setItem("lb",JSON.stringify(lb));
 
-function importLB(){
-    let lb = JSON.parse(localStorage.getItem("leaderboard")||"[]");
-
-    let txt = lb.map((x,i)=>`#${i+1} ${x.name} - ${x.score}`).join("\n");
-
-    document.getElementById("lb").innerText=txt;
+    document.getElementById("lb").innerHTML=
+        lb.map((x,i)=>
+        `<div>#${i+1} ${x.name} - $${Math.floor(x.score)}</div>`
+        ).join("");
 }
 
 // ===== UI =====
@@ -297,6 +304,12 @@ function update(){
     document.getElementById("rb").innerText=rb;
     document.getElementById("mul").innerText=mult.toFixed(1);
 
+    document.getElementById("cCost").innerText=
+        Math.floor(10*Math.pow(1.35,clickLevel));
+
+    document.getElementById("aCost").innerText=
+        Math.floor(25*Math.pow(1.4,autoLevel));
+
     autosave();
 }
 
@@ -305,20 +318,20 @@ function autosave(){
     save(u,{pass:load(u).pass,money,cp,ap,rb,mult});
 }
 
-function animate(){
+function animate(e){
     let b=document.getElementById("clickBtn");
     b.classList.add("pop");
     setTimeout(()=>b.classList.remove("pop"),150);
 }
 
 function show(){
-    document.getElementById("login").style.display="none";
+    document.getElementById("loginCard").style.display="none";
     document.getElementById("game").style.display="block";
 }
 
-function msg(t){
-    document.getElementById("msg").innerText=t;
-}
+function msg(t){document.getElementById("msg").innerText=t;}
+function uInput(){return document.getElementById("u").value;}
+function pInput(){return document.getElementById("p").value;}
 </script>
 
 </body>
