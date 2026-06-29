@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Infinite Money Clicker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:Arial, sans-serif;
+margin:0;
+padding:0;
+text-align:center;
+}
+
+header{
+background:#1d4ed8;
+padding:25px;
+font-size:32px;
+font-weight:bold;
+letter-spacing:1px;
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+.box{
+background:#1e293b;
+width:90%;
+max-width:600px;
+margin:25px auto;
+padding:25px;
+border-radius:20px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
+}
+
+input{
+width:80%;
+padding:12px;
+border-radius:10px;
+border:0;
+margin-top:10px;
+font-size:18px;
+}
+
+button{
+padding:18px;
+margin:10px;
+font-size:18px;
+border-radius:12px;
+border:0;
+cursor:pointer;
+background:#3b82f6;
+color:white;
+width:80%;
+max-width:300px;
+transition:0.15s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+#money{
+font-size:55px;
+font-weight:bold;
+}
+
+hr{
+border:0;
+height:2px;
+background:#334155;
+margin:20px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>💰 Infinite Clicker</header>
+
+<div class="box" id="loginBox">
+<h2>Create / Load Account</h2>
+<input id="usernameInput" placeholder="Enter username">
+<button onclick="login()">Continue</button>
+</div>
+
+<div class="box" id="gameBox" style="display:none;">
+<h1>$<span id="money">0</span></h1>
+
+<button onclick="clickMoney()">CLICK FOR MONEY</button>
+
+<h3>Money Per Click: <span id="clickPower">1</span></h3>
+<h3>Money Per Second: <span id="autoPower">0</span></h3>
+
+<hr>
+
+<h2>Upgrades</h2>
+
+<button onclick="upgradeClick()">
+Upgrade Click<br>
+Cost: $<span id="clickCost">10</span>
+</button>
+
+<button onclick="upgradeAuto()">
+Upgrade Auto<br>
+Cost: $<span id="autoCost">50</span>
+</button>
+
+<hr>
+
+<button onclick="saveGame()">Save Game</button>
+</div>
+
+<script>
+
+let username = "";
+let money = 0;
+let clickPower = 1;
+let autoPower = 0;
+let clickLevel = 0;
+let autoLevel = 0;
+
+function format(num){
+if(num >= 1e9) return (num/1e9).toFixed(2)+"B";
+if(num >= 1e6) return (num/1e6).toFixed(2)+"M";
+return Math.floor(num);
+}
+
+function login(){
+username = document.getElementById("usernameInput").value.trim();
+if(username.length < 1) return;
+
+loadGame();
+
+document.getElementById("loginBox").style.display="none";
+document.getElementById("gameBox").style.display="block";
+
+update();
+}
+
+function saveGame(){
+const data = {
+money,
+clickPower,
+autoPower,
+clickLevel,
+autoLevel
+};
+
+localStorage.setItem("clicker_"+username, JSON.stringify(data));
+}
+
+function loadGame(){
+const saved = localStorage.getItem("clicker_"+username);
+
+if(saved){
+const data = JSON.parse(saved);
+money = data.money;
+clickPower = data.clickPower;
+autoPower = data.autoPower;
+clickLevel = data.clickLevel;
+autoLevel = data.autoLevel;
+}
+}
+
+function clickMoney(){
+money += clickPower;
+update();
+}
+
+function upgradeClick(){
+let cost = Math.floor(10 * Math.pow(1.25, clickLevel));
+if(money >= cost){
+money -= cost;
+clickPower += Math.floor(clickPower * 0.5) + 1;
+clickLevel++;
+update();
+}
+}
+
+function upgradeAuto(){
+let cost = Math.floor(50 * Math.pow(1.5, autoLevel));
+if(money >= cost){
+money -= cost;
+autoPower += 1;
+autoLevel++;
+update();
+}
+}
+
+setInterval(()=>{
+money += autoPower;
+update();
+}, 1000);
+
+function update(){
+document.getElementById("money").innerHTML = format(money);
+document.getElementById("clickPower").innerHTML = format(clickPower);
+document.getElementById("autoPower").innerHTML = format(autoPower);
+document.getElementById("clickCost").innerHTML =
+format(Math.floor(10 * Math.pow(1.25, clickLevel)));
+document.getElementById("autoCost").innerHTML =
+format(Math.floor(50 * Math.pow(1.5, autoLevel)));
+
+saveGame();
+}
+
+update();
+
+</script>
+
+</body>
+</html>
