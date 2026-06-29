@@ -14,9 +14,7 @@
     --muted:#9ca3af;
 }
 
-*{
-    box-sizing:border-box;
-}
+*{ box-sizing:border-box; }
 
 body{
     background:radial-gradient(circle at top,#1d4ed8 0,#020617 45%,#000 100%);
@@ -91,23 +89,14 @@ button{
     transition:transform .12s,box-shadow .12s,background .12s;
 }
 
-button.primary{
-    background:var(--accent);
-}
-
-button.secondary{
-    background:#1f2937;
-}
-
-button.success{
-    background:var(--accent2);
-}
+button.primary{ background:var(--accent); }
+button.secondary{ background:#1f2937; }
+button.success{ background:var(--accent2); }
 
 button:hover{
     transform:translateY(-1px) scale(1.03);
     box-shadow:0 10px 25px rgba(15,23,42,.8);
 }
-
 button:active{
     transform:scale(.98);
     box-shadow:none;
@@ -156,18 +145,9 @@ hr{
     border-bottom:1px solid rgba(30,64,175,.35);
 }
 
-.leaderboard-rank{
-    color:var(--muted);
-    margin-right:8px;
-}
-
-.leaderboard-name{
-    font-weight:600;
-}
-
-.leaderboard-score{
-    color:var(--accent2);
-}
+.leaderboard-rank{ color:var(--muted); margin-right:8px; }
+.leaderboard-name{ font-weight:600; }
+.leaderboard-score{ color:var(--accent2); }
 
 .small{
     font-size:13px;
@@ -175,13 +155,8 @@ hr{
 }
 
 @media (max-width:600px){
-    #money{
-        font-size:32px;
-    }
-    button{
-        width:100%;
-        max-width:none;
-    }
+    #money{ font-size:32px; }
+    button{ width:100%; max-width:none; }
 }
 </style>
 </head>
@@ -195,7 +170,7 @@ hr{
     <!-- LOGIN / ACCOUNT CARD -->
     <div class="card" id="authCard">
         <div class="card-title">Account Login</div>
-        <div class="small">Accounts + leaderboards are global when you connect this to a backend API.</div>
+        <div class="small">Local accounts (username + password) stored on this device.</div>
 
         <input id="usernameInput" placeholder="Username">
         <input id="passwordInput" type="password" placeholder="Password">
@@ -236,20 +211,18 @@ hr{
 
         <hr>
 
-        <button class="success" onclick="saveGame()">Save to Cloud</button>
+        <button class="success" onclick="saveGame()">Save</button>
         <div class="small" id="saveStatus"></div>
     </div>
 
     <!-- LEADERBOARD CARD -->
     <div class="card" id="leaderboardCard" style="display:none;">
-        <div class="card-title">Global Leaderboard</div>
-        <div class="small">Top players by total money (requires backend API).</div>
+        <div class="card-title">Leaderboard (This Device)</div>
+        <div class="small">Shows top accounts saved on this device.</div>
 
-        <button class="secondary" onclick="fetchLeaderboard()">Refresh Leaderboard</button>
+        <button class="secondary" onclick="refreshLeaderboard()">Refresh Leaderboard</button>
 
-        <div class="leaderboard-list" id="leaderboardList">
-            <!-- Filled by JS -->
-        </div>
+        <div class="leaderboard-list" id="leaderboardList"></div>
     </div>
 
 </div>
@@ -267,6 +240,7 @@ let autoLevel = 0;
 // ===== BIG NUMBER FORMATTER =====
 function formatBig(num){
     const units = [
+        { value: 1e18, suffix: "E" },      // quintillion-ish
         { value: 1e15, suffix: "Q" },      // quadrillion
         { value: 1e12, suffix: "T" },      // trillion
         { value: 1e9,  suffix: "B" },      // billion
@@ -282,183 +256,136 @@ function formatBig(num){
     return Math.floor(num);
 }
 
-// ===== AUTH / ACCOUNTS =====
-// NOTE: These functions assume you have a backend API.
-// Replace URLs with your real endpoints.
-
-async function login(isSignup){
-    username = document.getElementById("usernameInput").value.trim();
-    password = document.getElementById("passwordInput").value;
-
-    const statusEl = document.getElementById("authStatus");
-
-    if(!username || !password){
-        statusEl.textContent = "Enter both username and password.";
-        return;
-    }
-
-    statusEl.textContent = "Contacting server...";
-
-    try{
-        // Example payload
-        const payload = { username, password };
-
-        // Placeholder URL – you must implement this on your server
-        const url = isSignup ? "/api/signup" : "/api/login";
-
-        // If you don't have a backend yet, comment out fetch and just call localLoad()
-        const res = await fetch(url,{
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body:JSON.stringify(payload)
-        });
-
-        if(!res.ok){
-            statusEl.textContent = "Server error / invalid credentials.";
-            return;
-        }
-
-        const data = await res.json();
-
-        // Expect backend to return user game state or null
-        if(data && data.state){
-            money       = data.state.money       ?? 0;
-            clickPower  = data.state.clickPower  ?? 1;
-            autoPower   = data.state.autoPower   ?? 0;
-            clickLevel  = data.state.clickLevel  ?? 0;
-            autoLevel   = data.state.autoLevel   ?? 0;
-        }else{
-            // New account default
-            money = 0;
-            clickPower = 1;
-            autoPower = 0;
-            clickLevel = 0;
-            autoLevel = 0;
-        }
-
-        statusEl.textContent = isSignup ? "Account created!" : "Logged in!";
-        document.getElementById("authCard").style.display = "none";
-        document.getElementById("gameCard").style.display = "block";
-        document.getElementById("leaderboardCard").style.display = "block";
-        document.getElementById("currentUser").textContent = username;
-
-        update();
-        fetchLeaderboard(); // load leaderboard after login
-
-    }catch(e){
-        // Fallback: local-only mode if server not available
-        statusEl.textContent = "Server unreachable. Running in local mode.";
-        localLoad();
-        document.getElementById("authCard").style.display = "none";
-        document.getElementById("gameCard").style.display = "block";
-        document.getElementById("leaderboardCard").style.display = "block";
-        document.getElementById("currentUser").textContent = username;
-        update();
-    }
+// ===== LOCAL ACCOUNT STORAGE =====
+function accountKey(name){
+    return "clicker_account_"+name;
 }
 
-// ===== LOCAL SAVE (fallback) =====
-function localKey(){
-    return "clicker_"+username;
-}
-
-function localSave(){
+function saveAccount(){
+    if(!username) return;
     const data = {
+        password,
         money,
         clickPower,
         autoPower,
         clickLevel,
         autoLevel
     };
-    localStorage.setItem(localKey(), JSON.stringify(data));
+    localStorage.setItem(accountKey(username), JSON.stringify(data));
 }
 
-function localLoad(){
-    const raw = localStorage.getItem(localKey());
-    if(!raw) return;
-    const data = JSON.parse(raw);
-    money       = data.money       ?? 0;
-    clickPower  = data.clickPower  ?? 1;
-    autoPower   = data.autoPower   ?? 0;
-    clickLevel  = data.clickLevel  ?? 0;
-    autoLevel   = data.autoLevel   ?? 0;
-}
-
-// ===== SAVE TO CLOUD / LEADERBOARD =====
-async function saveGame(){
-    const saveStatus = document.getElementById("saveStatus");
-    saveStatus.textContent = "Saving...";
-
-    const payload = {
-        username,
-        password,
-        state:{
-            money,
-            clickPower,
-            autoPower,
-            clickLevel,
-            autoLevel
-        }
-    };
-
+function loadAccount(name){
+    const raw = localStorage.getItem(accountKey(name));
+    if(!raw) return null;
     try{
-        const res = await fetch("/api/save",{
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body:JSON.stringify(payload)
-        });
-
-        if(!res.ok){
-            saveStatus.textContent = "Cloud save failed (server error).";
-            localSave();
-            return;
-        }
-
-        saveStatus.textContent = "Saved to cloud!";
-    }catch(e){
-        saveStatus.textContent = "Cloud unreachable. Saved locally.";
-        localSave();
+        return JSON.parse(raw);
+    }catch{
+        return null;
     }
 }
 
-async function fetchLeaderboard(){
+// ===== LOGIN / SIGNUP =====
+function login(isSignup){
+    const userInput = document.getElementById("usernameInput").value.trim();
+    const passInput = document.getElementById("passwordInput").value;
+    const statusEl = document.getElementById("authStatus");
+
+    if(!userInput || !passInput){
+        statusEl.textContent = "Enter both username and password.";
+        return;
+    }
+
+    const existing = loadAccount(userInput);
+
+    if(isSignup){
+        if(existing){
+            statusEl.textContent = "Username already exists. Try logging in.";
+            return;
+        }
+        // create new account
+        username = userInput;
+        password = passInput;
+        money = 0;
+        clickPower = 1;
+        autoPower = 0;
+        clickLevel = 0;
+        autoLevel = 0;
+        saveAccount();
+        statusEl.textContent = "Account created!";
+    }else{
+        // login
+        if(!existing){
+            statusEl.textContent = "Account not found. Try signing up.";
+            return;
+        }
+        if(existing.password !== passInput){
+            statusEl.textContent = "Incorrect password.";
+            return;
+        }
+        username   = userInput;
+        password   = passInput;
+        money      = existing.money      ?? 0;
+        clickPower = existing.clickPower ?? 1;
+        autoPower  = existing.autoPower  ?? 0;
+        clickLevel = existing.clickLevel ?? 0;
+        autoLevel  = existing.autoLevel  ?? 0;
+        statusEl.textContent = "Logged in!";
+    }
+
+    document.getElementById("authCard").style.display = "none";
+    document.getElementById("gameCard").style.display = "block";
+    document.getElementById("leaderboardCard").style.display = "block";
+    document.getElementById("currentUser").textContent = username;
+
+    update();
+    refreshLeaderboard();
+}
+
+// ===== LEADERBOARD (LOCAL) =====
+function getAllAccounts(){
+    const accounts = [];
+    for(let i=0;i<localStorage.length;i++){
+        const key = localStorage.key(i);
+        if(key && key.startsWith("clicker_account_")){
+            const name = key.replace("clicker_account_","");
+            const data = loadAccount(name);
+            if(data){
+                accounts.push({
+                    username:name,
+                    money:data.money || 0
+                });
+            }
+        }
+    }
+    accounts.sort((a,b)=>b.money - a.money);
+    return accounts;
+}
+
+function refreshLeaderboard(){
     const listEl = document.getElementById("leaderboardList");
-    listEl.innerHTML = "Loading leaderboard...";
+    const accounts = getAllAccounts();
 
-    try{
-        const res = await fetch("/api/leaderboard");
-        if(!res.ok){
-            listEl.innerHTML = "Failed to load leaderboard.";
-            return;
-        }
-
-        const data = await res.json();
-        // Expect: data = [{ username, money }, ...]
-        listEl.innerHTML = "";
-
-        (data || []).slice(0,50).forEach((entry,idx)=>{
-            const row = document.createElement("div");
-            row.className = "leaderboard-item";
-
-            const left = document.createElement("div");
-            left.innerHTML = `<span class="leaderboard-rank">#${idx+1}</span><span class="leaderboard-name">${entry.username}</span>`;
-
-            const right = document.createElement("div");
-            right.className = "leaderboard-score";
-            right.textContent = "$"+formatBig(entry.money || 0);
-
-            row.appendChild(left);
-            row.appendChild(right);
-            listEl.appendChild(row);
-        });
-
-        if(!listEl.innerHTML){
-            listEl.innerHTML = "<span class='small'>No entries yet.</span>";
-        }
-
-    }catch(e){
-        listEl.innerHTML = "Leaderboard server unreachable.";
+    if(accounts.length === 0){
+        listEl.innerHTML = "<span class='small'>No accounts saved yet.</span>";
+        return;
     }
+
+    listEl.innerHTML = "";
+    accounts.slice(0,50).forEach((entry,idx)=>{
+        const row = document.createElement("div");
+        row.className = "leaderboard-item";
+
+        const left = document.createElement("div");
+        left.innerHTML = `<span class="leaderboard-rank">#${idx+1}</span><span class="leaderboard-name">${entry.username}</span>`;
+
+        const right = document.createElement("div");
+        right.className = "leaderboard-score";
+        right.textContent = "$"+formatBig(entry.money);
+
+        row.appendChild(left);
+        row.appendChild(right);
+        listEl.appendChild(row);
+    });
 }
 
 // ===== GAME LOGIC =====
@@ -501,9 +428,9 @@ function update(){
     document.getElementById("autoCost").textContent   =
         formatBig(Math.floor(50 * Math.pow(1.5, autoLevel)));
 
-    // Always keep a local backup
     if(username){
-        localSave();
+        saveAccount();
+        document.getElementById("saveStatus").textContent = "Saved.";
     }
 }
 </script>
