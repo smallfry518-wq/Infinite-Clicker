@@ -1,343 +1,1898 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Infinite Clicker X (FIXED FINAL)</title>
+
+<title>Infinite Clicker X</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+
 <style>
+
 *{
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-}
-
-html,body{
-    margin:0;
-    font-family:system-ui;
-    background:radial-gradient(circle at top,#1e3a8a,#020617 70%,black);
-    color:white;
-    text-align:center;
-    overscroll-behavior:none;
-}
-
-header{
-    padding:14px;
-    background:#0f172a;
-    font-weight:900;
-}
-
-.main{max-width:900px;margin:auto;padding:12px;}
-
-.card{
-    background:#0f172a;
-    padding:16px;
-    margin:12px 0;
-    border-radius:16px;
-    border:1px solid #334155;
-}
-
-#money{
-    font-size:44px;
-    font-weight:900;
-}
-
-.stats{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:8px;
-}
-
-.pill{
-    background:#020617;
-    padding:6px 10px;
-    border-radius:999px;
-    font-size:13px;
-}
-
-button{
-    padding:12px 14px;
-    margin:6px;
-    border-radius:999px;
-    border:0;
-    cursor:pointer;
-    font-size:15px;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
     touch-action:manipulation;
 }
 
-.primary{background:#3b82f6;color:white;}
-.green{background:#22c55e;color:white;}
-.dark{background:#1f2937;color:white;}
 
-.shop-grid{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
+body{
+
+    margin:0;
+
+    font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+
+    background:
+    radial-gradient(circle at top,#2563eb,#020617 55%,black);
+
+    color:white;
+
+    text-align:center;
+
 }
 
-.shop-item{
-    width:240px;
-    background:#020617;
-    border:1px solid #334155;
-    border-radius:14px;
-    padding:12px;
+
+
+header{
+
+    padding:18px;
+
+    font-size:25px;
+
+    font-weight:900;
+
+    background:rgba(15,23,42,.85);
+
+    backdrop-filter:blur(15px);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:10;
+
 }
 
-.small{font-size:13px;color:#94a3b8;}
 
-.pop{animation:pop .15s ease;}
+
+
+.main{
+
+    max-width:1000px;
+
+    margin:auto;
+
+    padding:15px;
+
+}
+
+
+
+
+
+.card{
+
+
+    background:rgba(15,23,42,.9);
+
+    backdrop-filter:blur(15px);
+
+    border:
+
+    1px solid rgba(148,163,184,.3);
+
+
+    border-radius:22px;
+
+    padding:20px;
+
+    margin-bottom:18px;
+
+
+    box-shadow:
+
+    0 20px 50px rgba(0,0,0,.5);
+
+
+}
+
+
+
+
+
+input{
+
+
+width:90%;
+
+max-width:350px;
+
+padding:13px;
+
+margin:7px;
+
+
+border-radius:14px;
+
+border:1px solid #475569;
+
+
+background:#020617;
+
+color:white;
+
+
+font-size:16px;
+
+
+}
+
+
+
+
+button{
+
+
+padding:13px 18px;
+
+margin:6px;
+
+border:0;
+
+border-radius:999px;
+
+font-size:15px;
+
+cursor:pointer;
+
+transition:.15s;
+
+
+}
+
+
+
+button:hover{
+
+transform:scale(1.05);
+
+}
+
+
+
+
+.primary{
+
+background:#3b82f6;
+
+color:white;
+
+}
+
+
+.green{
+
+background:#22c55e;
+
+color:white;
+
+}
+
+
+.purple{
+
+background:#a855f7;
+
+color:white;
+
+}
+
+
+.dark{
+
+background:#1e293b;
+
+color:white;
+
+}
+
+
+
+
+
+
+
+#money{
+
+
+font-size:50px;
+
+font-weight:1000;
+
+margin:10px;
+
+
+}
+
+
+
+
+.stats{
+
+
+display:flex;
+
+flex-wrap:wrap;
+
+justify-content:center;
+
+gap:10px;
+
+
+}
+
+
+
+
+.stat{
+
+
+background:#020617;
+
+padding:10px 15px;
+
+border-radius:999px;
+
+border:1px solid #334155;
+
+font-size:14px;
+
+
+}
+
+
+
+
+.shop{
+
+
+display:flex;
+
+flex-wrap:wrap;
+
+justify-content:center;
+
+gap:15px;
+
+
+}
+
+
+
+
+
+.upgrade{
+
+
+background:#020617;
+
+border-radius:18px;
+
+border:1px solid #334155;
+
+padding:18px;
+
+width:230px;
+
+
+}
+
+
+
+
+
+.small{
+
+color:#94a3b8;
+
+font-size:13px;
+
+
+}
+
+
+
+
+
+.leaderboard{
+
+
+text-align:left;
+
+max-height:250px;
+
+overflow:auto;
+
+
+}
+
+
+
+.lbitem{
+
+
+padding:8px;
+
+border-bottom:1px solid #334155;
+
+
+}
+
+
+
+
+
+.profile{
+
+
+display:flex;
+
+justify-content:center;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+
+}
+
+
+
+
+
+.avatar{
+
+
+width:90px;
+
+height:90px;
+
+border-radius:50%;
+
+background:#334155;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:40px;
+
+
+}
+
+
+
+
+
+.progress{
+
+
+height:15px;
+
+background:#020617;
+
+border-radius:999px;
+
+overflow:hidden;
+
+
+}
+
+
+
+
+
+.progress div{
+
+
+height:100%;
+
+background:#22c55e;
+
+width:0%;
+
+
+}
+
+
+
+
+
+
+.version{
+
+
+position:fixed;
+
+bottom:15px;
+
+right:15px;
+
+
+background:rgba(15,23,42,.8);
+
+backdrop-filter:blur(10px);
+
+
+padding:8px 12px;
+
+
+border-radius:999px;
+
+
+font-size:12px;
+
+
+color:#94a3b8;
+
+
+border:1px solid #334155;
+
+
+z-index:999;
+
+
+}
+
+
+
+
+
+.pop{
+
+animation:pop .15s;
+
+}
+
+
+
 @keyframes pop{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.2);}
-    100%{transform:scale(1);}
+
+50%{
+
+transform:scale(1.15);
+
 }
+
+}
+
+
+
+
 </style>
+
 </head>
+
+
 
 <body>
 
-<header>💰 Infinite Clicker X (CLEAN FIX)</header>
+
+
+<header>
+
+💰 Infinite Clicker X
+
+</header>
+
+
+
+
 
 <div class="main">
 
+
+
+
+
 <!-- LOGIN -->
-<div class="card" id="loginCard">
-    <h2>Login</h2>
-    <input id="u" placeholder="Username">
-    <input id="p" type="password" placeholder="Password">
-    <br>
-    <button class="primary" onclick="login()">Enter Game</button>
-    <p id="msg"></p>
+
+<div class="card" id="loginBox">
+
+
+<h2>Account</h2>
+
+
+<input id="username" placeholder="Username">
+
+
+<input id="password" type="password" placeholder="Password">
+
+
+<br>
+
+
+<button class="primary" onclick="login()">
+
+Play
+
+</button>
+
+
+<p id="message"></p>
+
+
 </div>
+
+
+
+
+
+
+
 
 <!-- GAME -->
+
 <div id="game" style="display:none;">
 
+
+
+
+
 <div class="card">
-    <div id="money">$0</div>
 
-    <div class="stats">
-        <div class="pill">Click: <span id="cp">1</span></div>
-        <div class="pill">Auto: <span id="ap">0</span></div>
-        <div class="pill">Rebirth: <span id="rb">0</span></div>
-        <div class="pill">Mult: x<span id="mul">1</span></div>
-    </div>
 
-    <button class="primary" id="clickBtn" onclick="clickMoney(event)">CLICK 💥</button>
+<div class="profile">
+
+
+<div class="avatar" id="avatar">
+
+🙂
+
 </div>
+
+
+
+<div>
+
+
+<h2 id="playerName">
+
+Player
+
+</h2>
+
+
+<div>
+
+Level:
+<span id="level">
+
+1
+
+</span>
+
+
+</div>
+
+
+<div>
+
+XP:
+<span id="xp">
+
+0
+
+</span>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<br>
+
+
+
+<div class="progress">
+
+<div id="xpBar"></div>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div id="money">
+
+$0
+
+</div>
+
+
+
+
+<div class="stats">
+
+
+<div class="stat">
+
+Click:
+<span id="clickPower">
+
+1
+
+</span>
+
+</div>
+
+
+<div class="stat">
+
+Auto:
+<span id="autoPower">
+
+0
+
+</span>
+
+</div>
+
+
+<div class="stat">
+
+Multiplier:
+
+x<span id="mult">
+
+1
+
+</span>
+
+
+</div>
+
+
+
+<div class="stat">
+
+Rebirths:
+
+<span id="rebirths">
+
+0
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<button id="clickButton" class="primary" onclick="clickMoney()">
+
+CLICK 💥
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
 
 <!-- SHOP -->
+
 <div class="card">
-    <h2>🛒 Shop</h2>
 
-    <div class="shop-grid">
 
-        <div class="shop-item">
-            <div><b>Click Upgrade</b></div>
-            <div class="small">Boost click power</div>
-            <div>Cost: $<span id="cCost">10</span></div>
-            <button class="dark" onclick="buyClick()">Buy</button>
-        </div>
+<h2>🛒 Upgrade Shop</h2>
 
-        <div class="shop-item">
-            <div><b>Auto Upgrade</b></div>
-            <div class="small">Passive income</div>
-            <div>Cost: $<span id="aCost">25</span></div>
-            <button class="dark" onclick="buyAuto()">Buy</button>
-        </div>
 
-        <div class="shop-item">
-            <div><b>Rebirth</b></div>
-            <div class="small">+0.5x multiplier per rebirth</div>
-            <div>Need: $5000</div>
-            <button class="green" onclick="rebirth()">REBIRTH</button>
-        </div>
 
-    </div>
+<div class="shop">
+
+
+
+
+
+<div class="upgrade">
+
+<h3>Click Power</h3>
+
+<p class="small">
+
+More money per click
+
+</p>
+
+
+Cost:
+
+$<span id="clickCost">
+
+10
+
+</span>
+
+
+<br>
+
+
+<button class="dark" onclick="buyClick()">
+
+Upgrade
+
+</button>
+
+
 </div>
 
-<!-- LEADERBOARD -->
+
+
+
+
+
+
+
+<div class="upgrade">
+
+<h3>Auto Income</h3>
+
+
+<p class="small">
+
+Earn every second
+
+</p>
+
+
+Cost:
+
+$<span id="autoCost">
+
+25
+
+</span>
+
+
+<br>
+
+
+<button class="dark" onclick="buyAuto()">
+
+Upgrade
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="upgrade">
+
+<h3>Critical Chance</h3>
+
+
+<p class="small">
+
+More lucky clicks
+
+</p>
+
+
+Cost:
+
+$<span id="critCost">
+
+100
+
+</span>
+
+
+<br>
+
+
+<button class="purple" onclick="buyCrit()">
+
+Upgrade
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="upgrade">
+
+<h3>Rebirth</h3>
+
+
+<p class="small">
+
+Reset for permanent power
+
+</p>
+
+
+Need:
+
+$5000
+
+
+<br>
+
+
+<button class="green" onclick="rebirth()">
+
+Rebirth
+
+</button>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- LEADERBOARDS -->
+
 <div class="card">
-    <h2>🏆 Leaderboard</h2>
-    <button class="dark" onclick="refreshLB()">Refresh</button>
-    <div id="lb"></div>
-</div>
+
+
+<h2>🏆 Money Leaderboard</h2>
+
+
+<div id="moneyBoard" class="leaderboard"></div>
+
+
+
+<h2>🔥 Rebirth Leaderboard</h2>
+
+
+<div id="rebirthBoard" class="leaderboard"></div>
+
+
 
 </div>
 
+
+
+
+
+
+
 </div>
+
+
+
+
+
+
+
+<!-- VERSION -->
+
+
+<div class="version">
+
+Infinite Clicker X
+
+<br>
+
+v2.0.0
+
+</div>
+
+
+
+
+
+
 
 <script>
 
-// ================= STATE =================
-let u="";
-let money=0;
-let cp=1;
-let ap=0;
 
-let rb=0;
+// ===============================
+// INFINITE CLICKER X v2.0 ENGINE
+// ===============================
 
-let clickLevel=0;
-let autoLevel=0;
 
-// ================= LOGIN =================
+// PLAYER DATA
+
+let username = "";
+
+let money = 0;
+
+let clickPower = 1;
+
+let autoPower = 0;
+
+let rebirths = 0;
+
+let level = 1;
+
+let xp = 0;
+
+let critChance = 5;
+
+
+let clickLevel = 0;
+
+let autoLevel = 0;
+
+let critLevel = 0;
+
+
+
+// ===============================
+// SAVE SYSTEM
+// ===============================
+
+
+function saveKey(){
+
+return "ICX_"+username;
+
+}
+
+
+
+function saveGame(){
+
+
+if(!username)return;
+
+
+
+localStorage.setItem(
+
+saveKey(),
+
+JSON.stringify({
+
+password:
+
+getAccount().password,
+
+
+money,
+
+clickPower,
+
+autoPower,
+
+rebirths,
+
+level,
+
+xp,
+
+critChance,
+
+clickLevel,
+
+autoLevel,
+
+critLevel,
+
+
+lastReward:
+
+Date.now()
+
+
+})
+
+);
+
+
+}
+
+
+
+
+
+
+function getAccount(){
+
+
+return JSON.parse(
+
+localStorage.getItem(saveKey()) || "{}"
+
+);
+
+
+}
+
+
+
+
+
+// ===============================
+// LOGIN
+// ===============================
+
+
 function login(){
-    let name=document.getElementById("u").value;
-    let pass=document.getElementById("p").value;
 
-    if(!name||!pass)return;
 
-    u=name;
+let user =
+document.getElementById("username").value;
 
-    let data=load(u);
 
-    if(!data){
-        save(u,{pass,money:0,cp:1,ap:0,rb:0,clickLevel:0,autoLevel:0});
-        msg("Created!");
-    }else{
-        if(data.pass!==pass)return msg("Wrong password");
-        msg("Loaded!");
-    }
+let pass =
+document.getElementById("password").value;
 
-    data=load(u);
 
-    money=data.money;
-    cp=data.cp;
-    ap=data.ap;
-    rb=data.rb;
-    clickLevel=data.clickLevel;
-    autoLevel=data.autoLevel;
 
-    show();
-    update();
+if(!user || !pass)
+
+return;
+
+
+
+username=user;
+
+
+
+let data=getAccount();
+
+
+
+if(!data.password){
+
+
+
+data={
+
+password:pass,
+
+money:0,
+
+clickPower:1,
+
+autoPower:0,
+
+rebirths:0,
+
+level:1,
+
+xp:0,
+
+critChance:5,
+
+clickLevel:0,
+
+autoLevel:0,
+
+critLevel:0,
+
+lastReward:Date.now()
+
+
+};
+
+
+localStorage.setItem(
+
+saveKey(),
+
+JSON.stringify(data)
+
+);
+
+
+
 }
 
-// ================= STORAGE =================
-function key(x){return "cx_"+x;}
-function save(x,d){localStorage.setItem(key(x),JSON.stringify(d));}
-function load(x){return JSON.parse(localStorage.getItem(key(x))||"null");}
+else{
 
-// ================= MULTIPLIER (FIXED CORE) =================
-function getMult(){
-    return 1 + (rb * 0.5);
+
+if(data.password!==pass){
+
+message("Wrong password");
+
+return;
+
 }
 
-// ================= CLICK =================
-function clickMoney(e){
-    let gain = cp * getMult();
 
-    if(Math.random()<0.1) gain *= 5;
-
-    money += gain;
-
-    animate();
-    update();
 }
 
-// ================= SHOP =================
+
+
+
+loadData();
+
+
+
+document.getElementById("loginBox").style.display="none";
+
+document.getElementById("game").style.display="block";
+
+
+document.getElementById("playerName").innerText=username;
+
+
+dailyReward();
+
+
+update();
+
+
+
+}
+
+
+
+
+
+
+
+
+function loadData(){
+
+
+let d=getAccount();
+
+
+
+money=d.money || 0;
+
+clickPower=d.clickPower || 1;
+
+autoPower=d.autoPower || 0;
+
+rebirths=d.rebirths || 0;
+
+level=d.level || 1;
+
+xp=d.xp || 0;
+
+critChance=d.critChance || 5;
+
+
+clickLevel=d.clickLevel || 0;
+
+autoLevel=d.autoLevel || 0;
+
+critLevel=d.critLevel || 0;
+
+
+}
+
+
+
+
+
+
+// ===============================
+// ANTI HACK
+// ===============================
+
+
+
+function antiHack(){
+
+
+
+if(money < 0)
+
+money=0;
+
+
+
+if(clickPower > 1000000000)
+
+clickPower=1000000000;
+
+
+
+if(autoPower > 1000000000)
+
+autoPower=1000000000;
+
+
+
+if(isNaN(money))
+
+money=0;
+
+
+
+}
+
+
+
+
+
+
+// ===============================
+// MULTIPLIER
+// ===============================
+
+
+
+function multiplier(){
+
+
+return 1 + (rebirths * .5);
+
+
+}
+
+
+
+
+
+
+// ===============================
+// CLICKING
+// ===============================
+
+
+function clickMoney(){
+
+
+
+let gain =
+
+clickPower * multiplier();
+
+
+
+
+if(Math.random()*100 < critChance){
+
+gain*=5;
+
+}
+
+
+
+
+
+money += gain;
+
+
+
+giveXP(2);
+
+
+
+update();
+
+
+
+let btn=document.getElementById("clickButton");
+
+
+btn.classList.add("pop");
+
+
+setTimeout(()=>{
+
+btn.classList.remove("pop");
+
+},150);
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// UPGRADES
+// ===============================
+
+
+
 function buyClick(){
-    let cost=Math.floor(10*Math.pow(1.35,clickLevel));
 
-    if(money>=cost){
-        money-=cost;
-        cp++;
-        clickLevel++;
-    }
 
-    update();
+let cost=
+
+Math.floor(
+
+25*Math.pow(1.35,clickLevel)
+
+);
+
+
+
+if(money>=cost){
+
+
+money-=cost;
+
+
+clickPower+=
+
+Math.floor(clickPower*.5)+1;
+
+
+clickLevel++;
+
+
 }
+
+
+update();
+
+}
+
+
+
 
 function buyAuto(){
-    let cost=Math.floor(25*Math.pow(1.4,autoLevel));
 
-    if(money>=cost){
-        money-=cost;
-        ap++;
-        autoLevel++;
-    }
 
-    update();
+
+let cost=
+
+Math.floor(
+
+75*Math.pow(1.45,autoLevel)
+
+);
+
+
+
+if(money>=cost){
+
+
+money-=cost;
+
+
+autoPower++;
+
+autoLevel++;
+
+
 }
 
-// ================= REBIRTH =================
+
+
+update();
+
+
+
+}
+
+
+
+
+
+
+function buyCrit(){
+
+
+let cost=
+
+Math.floor(
+
+100*Math.pow(1.6,critLevel)
+
+);
+
+
+
+if(money>=cost){
+
+
+money-=cost;
+
+
+critChance+=2;
+
+
+critLevel++;
+
+
+}
+
+
+
+update();
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// REBIRTH
+// ===============================
+
+
 function rebirth(){
-    if(money<5000)return;
 
-    money=0;
-    cp=1;
-    ap=0;
-    clickLevel=0;
-    autoLevel=0;
 
-    rb++;
 
-    update();
+if(money < 5000)
+
+return;
+
+
+
+money=0;
+
+
+clickPower=1;
+
+autoPower=0;
+
+
+clickLevel=0;
+
+autoLevel=0;
+
+
+rebirths++;
+
+
+xp+=100;
+
+
+update();
+
+
 }
 
-// ================= AUTO =================
+
+
+
+
+
+
+
+// ===============================
+// XP SYSTEM
+// ===============================
+
+
+function giveXP(amount){
+
+
+xp+=amount;
+
+
+
+let needed=
+
+level*100;
+
+
+
+if(xp>=needed){
+
+
+xp-=needed;
+
+
+level++;
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// DAILY BONUS
+// ===============================
+
+
+function dailyReward(){
+
+
+
+let data=getAccount();
+
+
+
+if(
+
+Date.now()-data.lastReward >
+
+86400000
+
+){
+
+
+
+money+=500;
+
+
+
+alert(
+
+"🎁 Daily reward +$500!"
+
+);
+
+
+
+data.lastReward=Date.now();
+
+
+localStorage.setItem(
+
+saveKey(),
+
+JSON.stringify(data)
+
+);
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+// ===============================
+// AUTO MONEY
+// ===============================
+
+
 setInterval(()=>{
-    money += ap * getMult();
-    update();
+
+
+money += autoPower * multiplier();
+
+
+giveXP(autoPower);
+
+
+
+update();
+
+
 },1000);
 
-// ================= LEADERBOARD =================
-function refreshLB(){
-    let lb=JSON.parse(localStorage.getItem("lb")||"[]");
 
-    lb.push({name:u,score:money});
 
-    lb.sort((a,b)=>b.score-a.score);
 
-    lb=lb.slice(0,10);
 
-    localStorage.setItem("lb",JSON.stringify(lb));
 
-    document.getElementById("lb").innerHTML =
-    lb.map((x,i)=>`#${i+1} ${x.name} - $${Math.floor(x.score)}`).join("<br>");
+
+
+// ===============================
+// LEADERBOARDS
+// ===============================
+
+
+
+function updateLeaderboards(){
+
+
+
+let moneyBoard=[];
+
+let rebirthBoard=[];
+
+
+
+
+for(let i=0;i<localStorage.length;i++){
+
+
+let key=
+
+localStorage.key(i);
+
+
+
+if(key.startsWith("ICX_")){
+
+
+let data=
+
+JSON.parse(localStorage.getItem(key));
+
+
+
+moneyBoard.push({
+
+name:key.replace("ICX_",""),
+
+score:data.money
+
+});
+
+
+
+
+rebirthBoard.push({
+
+name:key.replace("ICX_",""),
+
+score:data.rebirths
+
+});
+
+
+
 }
 
-// ================= UI =================
+
+}
+
+
+
+
+moneyBoard.sort((a,b)=>b.score-a.score);
+
+rebirthBoard.sort((a,b)=>b.score-a.score);
+
+
+
+
+document.getElementById("moneyBoard").innerHTML=
+
+moneyBoard.slice(0,10)
+
+.map((x,i)=>
+
+`<div class="lbitem">
+
+#${i+1} ${x.name}
+
+-$${Math.floor(x.score)}
+
+</div>`
+
+).join("");
+
+
+
+
+
+
+document.getElementById("rebirthBoard").innerHTML=
+
+rebirthBoard.slice(0,10)
+
+.map((x,i)=>
+
+`<div class="lbitem">
+
+#${i+1} ${x.name}
+
+🔥 ${x.score}
+
+</div>`
+
+).join("");
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// UI UPDATE
+// ===============================
+
+
 function update(){
-    document.getElementById("money").innerText="$"+Math.floor(money);
-    document.getElementById("cp").innerText=cp;
-    document.getElementById("ap").innerText=ap;
-    document.getElementById("rb").innerText=rb;
-    document.getElementById("mul").innerText=getMult().toFixed(2);
 
-    document.getElementById("cCost").innerText=
-        Math.floor(10*Math.pow(1.35,clickLevel));
 
-    document.getElementById("aCost").innerText=
-        Math.floor(25*Math.pow(1.4,autoLevel));
 
-    autosave();
+antiHack();
+
+
+
+document.getElementById("money").innerText=
+
+"$"+Math.floor(money);
+
+
+
+document.getElementById("clickPower").innerText=
+
+clickPower;
+
+
+
+document.getElementById("autoPower").innerText=
+
+autoPower;
+
+
+
+document.getElementById("rebirths").innerText=
+
+rebirths;
+
+
+
+document.getElementById("mult").innerText=
+
+multiplier().toFixed(2);
+
+
+
+document.getElementById("level").innerText=
+
+level;
+
+
+
+document.getElementById("xp").innerText=
+
+xp;
+
+
+
+document.getElementById("xpBar").style.width=
+
+Math.min(
+
+100,
+
+xp/(level*100)*100
+
+)+"%";
+
+
+
+
+
+document.getElementById("clickCost").innerText=
+
+Math.floor(
+
+25*Math.pow(1.35,clickLevel)
+
+);
+
+
+
+
+
+document.getElementById("autoCost").innerText=
+
+Math.floor(
+
+75*Math.pow(1.45,autoLevel)
+
+);
+
+
+
+
+
+document.getElementById("critCost").innerText=
+
+Math.floor(
+
+100*Math.pow(1.6,critLevel)
+
+);
+
+
+
+
+saveGame();
+
+
+updateLeaderboards();
+
+
+
 }
 
-function autosave(){
-    if(!u)return;
 
-    save(u,{
-        pass:load(u).pass,
-        money,cp,ap,rb,clickLevel,autoLevel
-    });
+
+
+
+
+
+function message(t){
+
+document.getElementById("message").innerText=t;
+
 }
 
-function animate(){
-    let b=document.getElementById("clickBtn");
-    b.classList.add("pop");
-    setTimeout(()=>b.classList.remove("pop"),150);
-}
 
-function show(){
-    document.getElementById("loginCard").style.display="none";
-    document.getElementById("game").style.display="block";
-}
-
-function msg(t){
-    document.getElementById("msg").innerText=t;
-}
 
 </script>
 
+
+
 </body>
+
 </html>
